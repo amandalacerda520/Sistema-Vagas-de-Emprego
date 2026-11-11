@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Vagas e Oportunidades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="filterCategory('todos')">
+                    <div class="bg-indigo-600 text-white p-2 rounded-xl">
+                        <i data-lucide="briefcase" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-bold text-xl text-slate-900 tracking-tight">Conecta<span class="text-indigo-600">Vagas</span></span>
+                </div>
+
+                <button onclick="openModal('modalPostJob')" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg transition-colors shadow-sm">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Anunciar Vaga</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3">Encontre sua próxima oportunidade</h1>
+            <p class="text-indigo-200 mb-8 text-base sm:text-lg">Conectando talentos a empresas e oportunidades locais de forma simples e direta.</p>
+
+            <div class="bg-white p-2 sm:p-3 rounded-2xl shadow-xl flex flex-col sm:flex-row gap-2 text-slate-800">
+                <div class="flex-1 flex items-center px-3 gap-2 bg-slate-50 rounded-xl border border-slate-200">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
+                    <input type="text" id="searchInput" placeholder="Cargo, palavra-chave ou empresa..." class="w-full py-3 bg-transparent border-none outline-none text-sm sm:text-base">
+                </div>
+                <div class="flex-1 flex items-center px-3 gap-2 bg-slate-50 rounded-xl border border-slate-200">
+                    <i data-lucide="map-pin" class="w-5 h-5 text-slate-400"></i>
+                    <input type="text" id="locationInput" placeholder="Cidade ou bairro..." class="w-full py-3 bg-transparent border-none outline-none text-sm sm:text-base">
+                </div>
+                <button onclick="applyFilters()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                    <span>Buscar</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+        
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-200">
+            <div class="flex flex-wrap items-center gap-2" id="categoryButtons">
+                <button onclick="filterCategory('todos')" class="cat-btn active bg-indigo-600 text-white font-medium px-4 py-2 rounded-full text-sm transition-colors" data-cat="todos">Todas</button>
+                <button onclick="filterCategory('CLT')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 font-medium px-4 py-2 rounded-full text-sm border border-slate-200 transition-colors" data-cat="CLT">CLT</button>
+                <button onclick="filterCategory('Estágio')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 font-medium px-4 py-2 rounded-full text-sm border border-slate-200 transition-colors" data-cat="Estágio">Estágio</button>
+                <button onclick="filterCategory('Freelance')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 font-medium px-4 py-2 rounded-full text-sm border border-slate-200 transition-colors" data-cat="Freelance">Freelance / Bico</button>
+                <button onclick="filterCategory('Home Office')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 font-medium px-4 py-2 rounded-full text-sm border border-slate-200 transition-colors" data-cat="Home Office">Home Office</button>
+            </div>
+            <div class="text-sm text-slate-500">
+                Mostrando <span id="jobCount" class="font-bold text-slate-900">0</span> vagas
+            </div>
+        </div>
+
+        <div id="jobList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+
+        <div id="noResults" class="hidden text-center py-16">
+            <div class="bg-slate-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="search-x" class="w-8 h-8 text-slate-400"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-800">Nenhuma vaga encontrada</h3>
+            <p class="text-slate-500 text-sm mt-1">Tente ajustar seus filtros de busca ou localização.</p>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-sm text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 ConectaVagas - Plataforma de Apoio ao Trabalhador.</p>
+        </div>
+    </footer>
+
+    <div id="modalApply" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('modalApply')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-900 mb-1" id="applyJobTitle">Candidatar-se à vaga</h3>
+            <p class="text-sm text-slate-500 mb-4" id="applyJobCompany">Empresa</p>
+            
+            <form id="formApply" onsubmit="handleApply(event)" class="space-y-4">
+                <input type="hidden" id="applyJobId">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Seu Nome Completo *</label>
+                    <input type="text" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">E-mail *</label>
+                    <input type="email" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Telefone / WhatsApp *</label>
+                    <input type="tel" required placeholder="(00) 00000-0000" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Apresentação / Resumo de Experiência</label>
+                    <textarea rows="3" placeholder="Conte brevemente sobre suas qualificações..." class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('modalApply')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 font-medium hover:bg-slate-50">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg">Enviar Candidatura</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalPostJob" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('modalPostJob')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h3 class="text-xl font-bold text-slate-900 mb-1">Publicar Nova Vaga</h3>
+            <p class="text-sm text-slate-500 mb-4">Preencha as informações para atrair candidatos.</p>
+            
+            <form id="formPostJob" onsubmit="handlePostJob(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Título do Cargo *</label>
+                    <input type="text" id="postTitle" required placeholder="Ex: Atendente de Loja, Desenvolvedor..." class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nome da Empresa / Contratante *</label>
+                        <input type="text" id="postCompany" required placeholder="Ex: Mercado Central" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Tipo de Vaga *</label>
+                        <select id="postType" required class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="CLT">CLT</option>
+                            <option value="Estágio">Estágio</option>
+                            <option value="Freelance">Freelance / Bico</option>
+                            <option value="Home Office">Home Office</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Localização *</label>
+                        <input type="text" id="postLocation" required placeholder="Ex: São Paulo, SP ou Centro" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Salário / Remuneração</label>
+                        <input type="text" id="postSalary" placeholder="Ex: R$ 2.000 / mês ou A combinar" class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Descrição da Vaga e Requisitos *</label>
+                    <textarea id="postDescription" rows="4" required placeholder="Descreva as responsabilidades, horário de trabalho e requisitos da oportunidade..." class="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('modalPostJob')" class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 font-medium hover:bg-slate-50">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg">Publicar Vaga</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+        <span id="toastMessage">Ação realizada com sucesso!</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
